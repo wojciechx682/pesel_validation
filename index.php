@@ -10,20 +10,32 @@
 
             //$_SESSION["result"] = validatePesel($pesel) ? "true" : "false";
 
-            $controlDigit = calculateChecksum($pesel);
 
-            $year = (int) substr($pesel, 0, 2);
-            $month = (int) substr($pesel, 2, 2);
-            $day = (int) substr($pesel, 4, 2);
-
-            validateDate($year, $month, $day);
 
 //            echo $year; echo "<br>";
 //            echo $month; echo "<br>";
 //            echo $day; exit();
 
-            if(validatePeselString($pesel) && ($controlDigit == $pesel[10])){
-                $_SESSION["result"] = "true";
+            if(validatePeselString($pesel)) {
+
+                $controlDigit = calculateChecksum($pesel);
+
+                if ($controlDigit == $pesel[10]) {
+
+                    $year = (int) substr($pesel, 0, 2);
+                    $month = (int) substr($pesel, 2, 2);
+                    $day = (int) substr($pesel, 4, 2);
+
+                    if (validateDate($year, $month, $day)) {
+                        $_SESSION["result"] = "true";
+                    } else {
+                        $_SESSION["result"] = "false";
+                    }
+
+                } else {
+                    $_SESSION["result"] = "false";
+                }
+
             } else {
                 $_SESSION["result"] = "false";
             }
