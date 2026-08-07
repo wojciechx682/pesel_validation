@@ -8,32 +8,8 @@
 
             $pesel = $_POST["pesel"];
 
-            //$_SESSION["result"] = validatePesel($pesel) ? "true" : "false";
-
-//            echo $year; echo "<br>";
-//            echo $month; echo "<br>";
-//            echo $day; exit();
-
-            if(validatePeselString($pesel)) {
-
-                $controlDigit = calculateChecksum($pesel);
-
-                if ($controlDigit == $pesel[10]) {
-
-                    $year = (int) substr($pesel, 0, 2);
-                    $month = (int) substr($pesel, 2, 2);
-                    $day = (int) substr($pesel, 4, 2);
-
-                    if (validateDate($year, $month, $day)) {
-                        $_SESSION["result"] = "true";
-                    } else {
-                        $_SESSION["result"] = "false";
-                    }
-
-                } else {
-                    $_SESSION["result"] = "false";
-                }
-
+            if(validatePesel($pesel)) {
+                $_SESSION["result"] = "true";
             } else {
                 $_SESSION["result"] = "false";
             }
@@ -43,6 +19,16 @@
 
         header('Location: ' . $_SERVER["REQUEST_URI"], true, 303);
         exit();
+    }
+
+    function validatePesel($pesel) {
+        if (!validatePeselString($pesel)) return false;
+        if (!calculateChecksum($pesel)) return false;
+        $year = (int) substr($pesel, 0, 2);
+        $month = (int) substr($pesel, 2, 2);
+        $day = (int) substr($pesel, 4, 2);
+        if (!validateDate($year, $month, $day)) return false;
+        return true;
     }
 
     function validatePeselString($pesel) {
@@ -77,7 +63,7 @@
 
         $result = (10 - ($sum % 10)) % 10;
 
-        return $result;
+        return $result == $pesel[10];
     }
 
     function validateDate($year, $month, $day) {
