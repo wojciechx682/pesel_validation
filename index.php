@@ -10,8 +10,6 @@
 
             //$_SESSION["result"] = validatePesel($pesel) ? "true" : "false";
 
-
-
 //            echo $year; echo "<br>";
 //            echo $month; echo "<br>";
 //            echo $day; exit();
@@ -55,7 +53,7 @@
         }
 
         // 11 cyfr
-        if (strlen($pesel) < 11 || strlen($pesel) > 11) {
+        if (strlen($pesel) !== 11) {
             return false;
         }
 
@@ -69,17 +67,15 @@
 
     function calculateChecksum($pesel) {
 
-
-
         $weights = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3];
 
         $sum = 0;
 
         for ($i = 0; $i < 10; $i++) {
-            $sum += ($pesel[$i] % 10) * $weights[$i];
+            $sum += $pesel[$i] * $weights[$i];
         }
 
-        $result = (10 - ($sum % 10));
+        $result = (10 - ($sum % 10)) % 10;
 
         return $result;
     }
@@ -116,6 +112,12 @@
 <head>
 
     <title>Walidator numeru PESEL</title>
+
+    <style>
+        body {
+            background-color: #7e7e7e;
+        }
+    </style>
 
 </head>
 <body>
